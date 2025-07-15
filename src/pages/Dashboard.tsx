@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   Plus, Search, FilterX, Filter, Download, RefreshCw, 
   Edit, Eye, Database, AlertCircle, ArrowDownUp,
-  Calendar, ChevronDown, CheckCircle, Clock, X,
+  Calendar, ChevronDown, CheckCircle, Clock, X, GitBranch,
   ChevronLeft, ChevronRight, BarChart3, Layers, FileText,
   Users, Settings, Activity, Edit2, ClipboardList
 } from 'lucide-react';
@@ -26,16 +26,29 @@ const Dashboard: React.FC = () => {
   
   // Mock summary data
   const summary = {
-    platforms: 6,
-    collections: 624,
-    totalFields: 156,
-    totalRecords: 25789,
-    convertedToKG: 18,
-    pendingConversion: 6,
-    conversionRate: 75,
-    avgConversionTime: '120ms',
-    errorRate: '0.5%',
-    ontologyCoverage: '85%'
+    // Tables metrics
+    totalTables: 1000,
+    contextualisedTables: 624,
+    tablesConvertedToKG: Math.round(624 * 0.75), // 75% of contextualised tables
+    tablesConversionRate: 75,
+    
+    // Fields metrics
+    totalFields: 12230,
+    contextualisedFields: 1234,
+    fieldsConvertedToKG: Math.round(1234 * 0.40), // 40% of contextualised fields
+    fieldsConversionRate: 40,
+    
+    // Relationships metrics
+    totalRelationships: 100,
+    contextualisedRelationships: 100,
+    relationshipsConvertedToKG: Math.round(100 * 0.40), // 40% of contextualised relationships
+    relationshipsConversionRate: 40,
+    
+    // Forms metrics
+    totalForms: 100,
+    contextualisedForms: 87,
+    formsConvertedToKG: Math.round(87 * 0.40), // 40% of contextualised forms
+    formsConversionRate: 40
   };
 
   // Mock forms data
@@ -149,12 +162,18 @@ const Dashboard: React.FC = () => {
       )}
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border border-slate-200 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Tables */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Connected Platforms</p>
-              <h3 className="text-2xl font-semibold text-slate-900 mt-1">{summary.platforms}</h3>
+              <p className="text-sm font-medium text-slate-600">Total Tables</p>
+              <h3 className="text-2xl font-semibold text-slate-900 mt-1">
+                {summary.contextualisedTables.toLocaleString()}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                of {summary.totalTables.toLocaleString()} contextualised
+              </p>
             </div>
             <div className="h-12 w-12 bg-blue-50 rounded-lg flex items-center justify-center">
               <Database className="h-6 w-6 text-blue-500" />
@@ -162,18 +181,26 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="mt-4 flex items-center text-sm">
             <span className="text-green-500 flex items-center">
-              <ArrowDownUp size={14} className="mr-1" />
-              +2 new
+              <BarChart3 size={14} className="mr-1" />
+              {summary.tablesConversionRate}% converted to KG
             </span>
-            <span className="text-slate-500 ml-2">this week</span>
+            <span className="text-slate-500 ml-2">
+              ({summary.tablesConvertedToKG} tables)
+            </span>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-slate-200 p-6">
+        {/* Total Fields */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Total Collections</p>
-              <h3 className="text-2xl font-semibold text-slate-900 mt-1">{summary.collections}</h3>
+              <p className="text-sm font-medium text-slate-600">Total Fields</p>
+              <h3 className="text-2xl font-semibold text-slate-900 mt-1">
+                {summary.contextualisedFields.toLocaleString()}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                of {summary.totalFields.toLocaleString()} contextualised
+              </p>
             </div>
             <div className="h-12 w-12 bg-purple-50 rounded-lg flex items-center justify-center">
               <Layers className="h-6 w-6 text-purple-500" />
@@ -182,43 +209,64 @@ const Dashboard: React.FC = () => {
           <div className="mt-4 flex items-center text-sm">
             <span className="text-green-500 flex items-center">
               <BarChart3 size={14} className="mr-1" />
-              {summary.conversionRate}% converted
+              {summary.fieldsConversionRate}% converted to KG
+            </span>
+            <span className="text-slate-500 ml-2">
+              ({summary.fieldsConvertedToKG} fields)
             </span>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-slate-200 p-6">
+        {/* Total Relationships */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Ontology Coverage</p>
-              <h3 className="text-2xl font-semibold text-slate-900 mt-1">{summary.ontologyCoverage}</h3>
+              <p className="text-sm font-medium text-slate-600">Total Relationships</p>
+              <h3 className="text-2xl font-semibold text-slate-900 mt-1">
+                {summary.contextualisedRelationships.toLocaleString()}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                of {summary.totalRelationships.toLocaleString()} contextualised
+              </p>
+            </div>
+            <div className="h-12 w-12 bg-orange-50 rounded-lg flex items-center justify-center">
+              <GitBranch className="h-6 w-6 text-orange-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center text-sm">
+            <span className="text-green-500 flex items-center">
+              <BarChart3 size={14} className="mr-1" />
+              {summary.relationshipsConversionRate}% converted to KG
+            </span>
+            <span className="text-slate-500 ml-2">
+              ({summary.relationshipsConvertedToKG} relationships)
+            </span>
+          </div>
+        </div>
+
+        {/* Total Forms */}
+        <div className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600">Total Forms</p>
+              <h3 className="text-2xl font-semibold text-slate-900 mt-1">
+                {summary.contextualisedForms.toLocaleString()}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                of {summary.totalForms.toLocaleString()} contextualised
+              </p>
             </div>
             <div className="h-12 w-12 bg-green-50 rounded-lg flex items-center justify-center">
-              <Activity className="h-6 w-6 text-green-500" />
+              <ClipboardList className="h-6 w-6 text-green-500" />
             </div>
           </div>
           <div className="mt-4 flex items-center text-sm">
             <span className="text-green-500 flex items-center">
-              <ArrowDownUp size={14} className="mr-1" />
-              +5% improvement
+              <BarChart3 size={14} className="mr-1" />
+              {summary.formsConversionRate}% converted to KG
             </span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-slate-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Error Rate</p>
-              <h3 className="text-2xl font-semibold text-slate-900 mt-1">{summary.errorRate}</h3>
-            </div>
-            <div className="h-12 w-12 bg-red-50 rounded-lg flex items-center justify-center">
-              <AlertCircle className="h-6 w-6 text-red-500" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center text-sm">
-            <span className="text-green-500 flex items-center">
-              <ArrowDownUp size={14} className="mr-1" />
-              -0.2% from last week
+            <span className="text-slate-500 ml-2">
+              ({summary.formsConvertedToKG} forms)
             </span>
           </div>
         </div>
