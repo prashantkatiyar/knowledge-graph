@@ -477,6 +477,296 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* New Widget Panel */}
+      {/* Category-Specific Insights Widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        {/* 1. Tables Insights Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Top Tables by Criticality & Metadata Quality</h3>
+          <div className="flex-1 overflow-hidden">
+            <div className="max-h-64 overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-white">
+                  <tr className="border-b border-slate-200">
+                    <th className="text-left py-2 text-slate-600 font-medium">Table</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Desc</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Alias</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Example</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: 'ASSET_MASTER', recordVolume: 1500000, hasDescription: true, hasAlias: true, hasExample: true },
+                    { name: 'WORK_ORDERS', recordVolume: 3200000, hasDescription: true, hasAlias: true, hasExample: false },
+                    { name: 'EQUIPMENT', recordVolume: 850000, hasDescription: true, hasAlias: true, hasExample: true },
+                    { name: 'LOCATIONS', recordVolume: 120000, hasDescription: true, hasAlias: true, hasExample: true },
+                    { name: 'MATERIALS', recordVolume: 950000, hasDescription: true, hasAlias: false, hasExample: false },
+                    { name: 'MAINTENANCE_LOGS', recordVolume: 4500000, hasDescription: true, hasAlias: false, hasExample: false },
+                    { name: 'EMPLOYEES', recordVolume: 85000, hasDescription: true, hasAlias: true, hasExample: true },
+                    { name: 'INVENTORY', recordVolume: 1200000, hasDescription: true, hasAlias: false, hasExample: false },
+                    { name: 'SUPPLIERS', recordVolume: 45000, hasDescription: true, hasAlias: true, hasExample: false },
+                    { name: 'PURCHASE_ORDERS', recordVolume: 750000, hasDescription: true, hasAlias: false, hasExample: false }
+                  ].map((table, index) => (
+                    <tr 
+                      key={index} 
+                      className={`${index % 2 === 0 ? 'bg-slate-50' : 'bg-white'} hover:bg-blue-50 transition-colors duration-150`}
+                    >
+                      <td className="py-2 font-medium text-slate-900 truncate">
+                        <div className="flex items-center">
+                          <span className="mr-2 text-xs text-slate-500">{index + 1}</span>
+                          <span>{table.name}</span>
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          {table.recordVolume.toLocaleString()} records
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.hasDescription ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          {table.hasDescription ? '✓' : '–'}
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.hasAlias ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          {table.hasAlias ? '✓' : '–'}
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.hasExample ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          {table.hasExample ? '✓' : '–'}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="mt-3 text-xs text-slate-500 text-center">
+            Green = metadata present. Gray = missing.
+          </div>
+        </div>
+
+        {/* 2. Fields Insights Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">High-Usage Fields Missing Metadata</h3>
+          <div className="flex-1 overflow-hidden">
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {[
+                { fieldName: 'STATUS', tableName: 'WORK_ORDERS', usageCount: 12500, missingDescription: true, missingAlias: false },
+                { fieldName: 'ASSET_ID', tableName: 'MAINTENANCE_LOGS', usageCount: 9800, missingDescription: false, missingAlias: true },
+                { fieldName: 'LOCATION_CODE', tableName: 'EQUIPMENT', usageCount: 8700, missingDescription: true, missingAlias: true },
+                { fieldName: 'PRIORITY', tableName: 'WORK_ORDERS', usageCount: 7600, missingDescription: true, missingAlias: false },
+                { fieldName: 'MATERIAL_TYPE', tableName: 'INVENTORY', usageCount: 6500, missingDescription: false, missingAlias: true }
+              ].map((field, index) => (
+                <div 
+                  key={index}
+                  className={`p-3 rounded-lg border ${index % 2 === 0 ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-200'} hover:border-primary transition-colors duration-200`}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="font-medium text-slate-900">{field.fieldName}</div>
+                      <div className="text-xs text-slate-500">{field.tableName}</div>
+                      <div className="text-xs text-slate-600 mt-1">
+                        {field.usageCount.toLocaleString()} queries/month
+                      </div>
+                      <div className="flex gap-1 mt-1">
+                        {field.missingDescription && (
+                          <span className="px-1.5 py-0.5 bg-red-100 text-red-800 rounded text-xs">
+                            No Desc
+                          </span>
+                        )}
+                        {field.missingAlias && (
+                          <span className="px-1.5 py-0.5 bg-red-100 text-red-800 rounded text-xs">
+                            No Alias
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button className="px-2 py-1 text-xs bg-primary text-white rounded hover:bg-primary-dark transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/30">
+                      Go
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3 text-center">
+            <button className="text-sm text-primary hover:text-primary-dark font-medium">
+              View All High-Usage Fields
+            </button>
+          </div>
+        </div>
+
+        {/* 3. Existing Relationships Insights Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Relationship Edge-Density & Usage</h3>
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="space-y-4">
+              {[
+                { tableName: 'ASSET_MASTER', relationshipCount: 12, max: 15 },
+                { tableName: 'WORK_ORDERS', relationshipCount: 8, max: 15 },
+                { tableName: 'EQUIPMENT', relationshipCount: 15, max: 15 },
+                { tableName: 'LOCATIONS', relationshipCount: 6, max: 15 },
+                { tableName: 'MATERIALS', relationshipCount: 4, max: 15 }
+              ].map((item, index) => (
+                <div key={index} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium text-slate-900 truncate max-w-[180px]">{item.tableName}</span>
+                    <span className="text-slate-600">{item.relationshipCount} edges</span>
+                  </div>
+                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${
+                        item.relationshipCount / item.max >= 0.8 ? 'bg-green-500' : 
+                        item.relationshipCount / item.max >= 0.5 ? 'bg-yellow-500' : 
+                        'bg-red-500'
+                      }`}
+                      style={{ width: `${(item.relationshipCount / item.max) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-center text-xs text-slate-500">
+              Showing tables with highest edge density
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Inverse Relationships Insights Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Round-Trip Link Coverage</h3>
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="relative w-32 h-32">
+              <svg viewBox="0 0 100 100" className="transform -rotate-90">
+                {/* Background circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="transparent"
+                  stroke="#E5E7EB"
+                  strokeWidth="10"
+                />
+                {/* Progress circle - 65% */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="transparent"
+                  stroke="#3B82F6"
+                  strokeWidth="10"
+                  strokeDasharray={`${2 * Math.PI * 45 * 0.65} ${2 * Math.PI * 45}`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span className="text-3xl font-bold text-slate-900">65%</span>
+                <span className="text-xs text-slate-500">coverage</span>
+              </div>
+            </div>
+            <div className="mt-4 text-center">
+              <div className="text-sm text-slate-600">
+                65 of 100 forward relationships have defined inverses
+              </div>
+              <div className="flex justify-center gap-4 mt-2">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-primary rounded-full mr-1"></div>
+                  <span className="text-xs text-slate-600">Defined</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-slate-200 rounded-full mr-1"></div>
+                  <span className="text-xs text-slate-600">Missing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Indirect Relationships Insights Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Multi-Hop Relationship Adoption</h3>
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="space-y-4">
+              {[
+                { hopLength: '2-hop', count: 45, max: 100 },
+                { hopLength: '3-hop', count: 28, max: 100 },
+                { hopLength: '4-hop', count: 12, max: 100 }
+              ].map((item, index) => (
+                <div key={index} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium text-slate-900">{item.hopLength}</span>
+                    <span className="text-slate-600">{item.count} relationships</span>
+                  </div>
+                  <div className="h-8 bg-slate-100 rounded-lg overflow-hidden relative">
+                    <div 
+                      className={`h-full ${
+                        index === 0 ? 'bg-blue-500' : 
+                        index === 1 ? 'bg-purple-500' : 
+                        'bg-indigo-500'
+                      }`}
+                      style={{ width: `${(item.count / item.max) * 100}%` }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
+                      {Math.round((item.count / item.max) * 100)}%
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-center text-sm text-slate-600">
+              Total: 85 indirect relationships defined
+            </div>
+          </div>
+        </div>
+
+        {/* 6. Self Relationships Insights Card */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Hierarchy Completeness & Depth</h3>
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="grid grid-cols-1 gap-6">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-900">Bidirectional Coverage</span>
+                  <span className="text-sm font-medium text-slate-900">78%</span>
+                </div>
+                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-green-500 rounded-full"
+                    style={{ width: '78%' }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500">
+                  78% of hierarchical tables have both parent→child and child→parent defined
+                </p>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-900">Depth Accuracy</span>
+                  <span className="text-sm font-medium text-slate-900">92%</span>
+                </div>
+                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-green-500 rounded-full"
+                    style={{ width: '92%' }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span>Annotated: 4.2 levels</span>
+                  <span>Actual: 4.6 levels</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
         {/* 1. High-Value Table Coverage Map */}
         <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
