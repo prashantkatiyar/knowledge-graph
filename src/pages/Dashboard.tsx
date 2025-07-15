@@ -86,49 +86,202 @@ const Dashboard: React.FC = () => {
 
   // Mock data for new widgets
   const widgetData = {
-    // Contextualisation Coverage Gauge
-    contextualisationCoverage: 67, // (624 + 1234 + 100) / (1000 + 12230 + 100) * 100
-    
-    // KG Conversion Rate
-    kgConversionRate: 58, // Average of all conversion rates
-    
-    // Daily Contextualisations (30-day sparkline)
-    dailyContextualisations: [
-      12, 15, 8, 22, 18, 25, 14, 19, 23, 16,
-      20, 17, 24, 13, 21, 26, 18, 15, 19, 22,
-      16, 28, 24, 20, 17, 23, 19, 25, 21, 18
+    // High-Value Table Coverage Map
+    highValueTables: [
+      { 
+        name: 'ASSET_MASTER', 
+        recordVolume: 1500000, 
+        queryFrequency: 8500,
+        coverage: {
+          description: 100,
+          alias: 80,
+          example: 60,
+          sampleData: 40
+        }
+      },
+      { 
+        name: 'WORK_ORDERS', 
+        recordVolume: 3200000, 
+        queryFrequency: 12000,
+        coverage: {
+          description: 90,
+          alias: 70,
+          example: 30,
+          sampleData: 20
+        }
+      },
+      { 
+        name: 'EQUIPMENT', 
+        recordVolume: 850000, 
+        queryFrequency: 7200,
+        coverage: {
+          description: 100,
+          alias: 100,
+          example: 80,
+          sampleData: 60
+        }
+      },
+      { 
+        name: 'LOCATIONS', 
+        recordVolume: 120000, 
+        queryFrequency: 6800,
+        coverage: {
+          description: 100,
+          alias: 90,
+          example: 70,
+          sampleData: 50
+        }
+      },
+      { 
+        name: 'MATERIALS', 
+        recordVolume: 950000, 
+        queryFrequency: 5400,
+        coverage: {
+          description: 80,
+          alias: 60,
+          example: 40,
+          sampleData: 20
+        }
+      },
+      { 
+        name: 'MAINTENANCE_LOGS', 
+        recordVolume: 4500000, 
+        queryFrequency: 4900,
+        coverage: {
+          description: 70,
+          alias: 50,
+          example: 20,
+          sampleData: 10
+        }
+      },
+      { 
+        name: 'EMPLOYEES', 
+        recordVolume: 85000, 
+        queryFrequency: 4200,
+        coverage: {
+          description: 100,
+          alias: 90,
+          example: 60,
+          sampleData: 40
+        }
+      },
+      { 
+        name: 'INVENTORY', 
+        recordVolume: 1200000, 
+        queryFrequency: 3800,
+        coverage: {
+          description: 60,
+          alias: 40,
+          example: 20,
+          sampleData: 0
+        }
+      },
+      { 
+        name: 'SUPPLIERS', 
+        recordVolume: 45000, 
+        queryFrequency: 3200,
+        coverage: {
+          description: 90,
+          alias: 70,
+          example: 50,
+          sampleData: 30
+        }
+      },
+      { 
+        name: 'PURCHASE_ORDERS', 
+        recordVolume: 750000, 
+        queryFrequency: 2900,
+        coverage: {
+          description: 80,
+          alias: 60,
+          example: 30,
+          sampleData: 10
+        }
+      }
     ],
     
-    // Top 10 Metadata-Hungry Entities
-    metadataHungryEntities: [
-      { name: 'WORK_ORDERS', type: 'Table', usage: 15000, completion: 25 },
-      { name: 'ASSET_STATUS', type: 'Field', usage: 12000, completion: 30 },
-      { name: 'EQUIPMENT_TYPE', type: 'Field', usage: 10500, completion: 35 },
-      { name: 'MAINTENANCE_LOG', type: 'Table', usage: 9800, completion: 20 },
-      { name: 'LOCATION_CODE', type: 'Field', usage: 8900, completion: 40 },
-      { name: 'INVENTORY', type: 'Table', usage: 8200, completion: 45 },
-      { name: 'PRIORITY_LEVEL', type: 'Field', usage: 7500, completion: 25 },
-      { name: 'SUPPLIER_INFO', type: 'Table', usage: 7100, completion: 30 },
-      { name: 'COST_CENTER', type: 'Field', usage: 6800, completion: 35 },
-      { name: 'SAFETY_NOTES', type: 'Field', usage: 6200, completion: 20 }
+    // Metadata Quality Scorecard
+    metadataQuality: {
+      tables: {
+        score: 78,
+        descriptionLength: 85,
+        aliasUniqueness: 92,
+        examplePresence: 58
+      },
+      fields: {
+        score: 62,
+        descriptionLength: 70,
+        aliasUniqueness: 85,
+        examplePresence: 32
+      },
+      relationships: {
+        score: 84,
+        descriptionLength: 90,
+        aliasUniqueness: 95,
+        examplePresence: 68
+      }
+    },
+    
+    // Graph Connectivity Gauge
+    graphConnectivity: {
+      reachableNodes: 82, // percentage
+      totalNodes: 1500,
+      connectedNodes: 1230,
+      orphanedNodes: 270
+    },
+    
+    // AI-Suggestion Adoption Rate
+    aiSuggestionAdoption: {
+      accepted: 68,
+      overridden: 22,
+      ignored: 10,
+      totalSuggestions: 1250,
+      byEntityType: {
+        tables: { accepted: 72, overridden: 18, ignored: 10 },
+        fields: { accepted: 65, overridden: 25, ignored: 10 },
+        relationships: { accepted: 78, overridden: 15, ignored: 7 }
+      }
+    },
+    
+    // Contextualisation Backlog by Age
+    contextualisationBacklog: {
+      recent: { label: '0-7 days', count: 145 },
+      medium: { label: '8-14 days', count: 87 },
+      older: { label: '15-30 days', count: 62 },
+      stale: { label: '30+ days', count: 38 }
+    },
+    
+    // Top Orphan Fields & Relationships
+    orphanEntities: [
+      { name: 'ASSET_STATUS', type: 'Field', table: 'ASSET_MASTER', queriesPerDay: 1250 },
+      { name: 'PRIORITY_CODE', type: 'Field', table: 'WORK_ORDERS', queriesPerDay: 980 },
+      { name: 'LOCATED_AT', type: 'Relationship', fromTable: 'EQUIPMENT', toTable: 'LOCATIONS', queriesPerDay: 875 },
+      { name: 'SERIAL_NUMBER', type: 'Field', table: 'EQUIPMENT', queriesPerDay: 820 },
+      { name: 'ASSIGNED_TO', type: 'Relationship', fromTable: 'WORK_ORDERS', toTable: 'EMPLOYEES', queriesPerDay: 760 },
+      { name: 'COST_CENTER', type: 'Field', table: 'MAINTENANCE_LOGS', queriesPerDay: 720 },
+      { name: 'CREATED_BY', type: 'Field', table: 'PURCHASE_ORDERS', queriesPerDay: 680 }
     ],
     
-    // Relationship Adoption Breakdown
-    relationshipAdoption: [
-      { label: 'Existing', value: 45, color: '#3B82F6' },
-      { label: 'Inverse', value: 25, color: '#10B981' },
-      { label: 'Indirect', value: 20, color: '#F59E0B' },
-      { label: 'Self', value: 10, color: '#8B5CF6' }
-    ],
+    // Knowledge Graph Query Heatmap
+    kgQueryHeatmap: {
+      // Last 4 weeks of data (28 days)
+      data: [
+        [45, 52, 58, 42, 65, 48, 32], // Week 1
+        [56, 78, 45, 42, 36, 25, 28], // Week 2
+        [65, 68, 75, 82, 64, 36, 42], // Week 3
+        [85, 120, 132, 105, 92, 75, 68] // Week 4 (most recent)
+      ],
+      maxValue: 132,
+      totalQueries: 1842
+    },
     
-    // Active Users Leaderboard
-    topContextualisers: [
-      { rank: 1, name: 'Sarah Chen', avatar: 'SC', edits: 47 },
-      { rank: 2, name: 'Mike Rodriguez', avatar: 'MR', edits: 42 },
-      { rank: 3, name: 'Emily Johnson', avatar: 'EJ', edits: 38 },
-      { rank: 4, name: 'David Kim', avatar: 'DK', edits: 35 },
-      { rank: 5, name: 'Lisa Wang', avatar: 'LW', edits: 31 }
-    ]
+    // Relationship Path-Length Distribution
+    relationshipPathLengths: {
+      oneHop: { count: 850, percentage: 65 },
+      twoHop: { count: 320, percentage: 25 },
+      threeHop: { count: 130, percentage: 10 },
+      total: 1300
+    }
   };
 
   return (
@@ -325,93 +478,318 @@ const Dashboard: React.FC = () => {
 
       {/* New Widget Panel */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        {/* Contextualisation Coverage Gauge */}
+        {/* 1. High-Value Table Coverage Map */}
         <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
-          <h3 className="text-lg font-semibold mb-4 text-slate-900">Overall Contextualisation Coverage</h3>
-          <div className="flex-1 flex items-center justify-center">
-            <RadialGauge 
-              value={widgetData.contextualisationCoverage}
-              label=""
-              className="tooltip"
-              title="Percentage of all entities (tables, fields, relationships) that have at least one description or alias."
-            />
-          </div>
-        </div>
-
-        {/* KG Conversion Rate Meter */}
-        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
-          <h3 className="text-lg font-semibold mb-4 text-slate-900">KG Conversion Rate</h3>
-          <div className="flex-1 flex items-center">
-            <ProgressBar 
-              value={widgetData.kgConversionRate}
-              label=""
-              className="tooltip"
-              title="Of all fully-contextualised entities, how many have been published into the live Knowledge Graph."
-            />
-          </div>
-        </div>
-
-        {/* Contextualisation Velocity Sparkline */}
-        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
-          <h3 className="text-lg font-semibold mb-4 text-slate-900">Daily Contextualisations (30-day)</h3>
-          <div className="flex-1 flex items-center">
-            <SparklineChart 
-              data={widgetData.dailyContextualisations}
-              className="w-full tooltip"
-              color="#3B82F6"
-              title="Daily contextualisation activity over the past 30 days"
-            />
-          </div>
-          <div className="mt-2 text-sm text-slate-600 text-center">
-            Avg: {Math.round(widgetData.dailyContextualisations.reduce((a, b) => a + b, 0) / widgetData.dailyContextualisations.length)} edits/day
-          </div>
-        </div>
-
-        {/* Top 10 Metadata-Hungry Entities */}
-        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
-          <h3 className="text-lg font-semibold mb-4 text-slate-900">Top Metadata-Hungry Entities</h3>
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">High-Value Table Coverage Map</h3>
           <div className="flex-1 overflow-hidden">
             <div className="max-h-64 overflow-y-auto">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-white">
                   <tr className="border-b border-slate-200">
-                    <th className="text-left py-2 text-slate-600 font-medium">Entity</th>
-                    <th className="text-left py-2 text-slate-600 font-medium">Type</th>
-                    <th className="text-right py-2 text-slate-600 font-medium">Usage</th>
-                    <th className="text-right py-2 text-slate-600 font-medium">Complete</th>
-                    <th className="text-center py-2 text-slate-600 font-medium">Action</th>
+                    <th className="text-left py-2 text-slate-600 font-medium">Table</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Desc</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Alias</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Example</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Sample</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {widgetData.metadataHungryEntities.map((entity, index) => (
+                  {widgetData.highValueTables.map((table, index) => (
                     <tr 
                       key={index} 
                       className={`${index % 2 === 0 ? 'bg-slate-50' : 'bg-white'} hover:bg-blue-50 transition-colors duration-150`}
                     >
-                      <td className="py-2 font-medium text-slate-900 truncate">{entity.name}</td>
+                      <td className="py-2 font-medium text-slate-900 truncate">
+                        <div className="flex items-center">
+                          <span className="mr-2 text-xs text-slate-500">{index + 1}</span>
+                          <span>{table.name}</span>
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          {table.recordVolume.toLocaleString()} records
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.coverage.description >= 80 ? 'bg-green-100 text-green-800' : 
+                          table.coverage.description >= 50 ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {table.coverage.description === 100 ? '✓' : `${table.coverage.description}%`}
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.coverage.alias >= 80 ? 'bg-green-100 text-green-800' : 
+                          table.coverage.alias >= 50 ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {table.coverage.alias === 100 ? '✓' : `${table.coverage.alias}%`}
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.coverage.example >= 80 ? 'bg-green-100 text-green-800' : 
+                          table.coverage.example >= 50 ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {table.coverage.example === 100 ? '✓' : `${table.coverage.example}%`}
+                        </div>
+                      </td>
+                      <td className="py-2 text-center">
+                        <div className={`w-6 h-6 mx-auto rounded-full flex items-center justify-center ${
+                          table.coverage.sampleData >= 80 ? 'bg-green-100 text-green-800' : 
+                          table.coverage.sampleData >= 50 ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {table.coverage.sampleData === 100 ? '✓' : `${table.coverage.sampleData}%`}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Metadata Quality Scorecard */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Metadata Quality Scorecard</h3>
+          <div className="flex-1 space-y-6">
+            {Object.entries(widgetData.metadataQuality).map(([entityType, data]) => (
+              <div key={entityType} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-slate-900 capitalize">{entityType}</span>
+                  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    data.score >= 80 ? 'bg-green-100 text-green-800' : 
+                    data.score >= 60 ? 'bg-yellow-100 text-yellow-800' : 
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    Score: {data.score}/100
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div className="bg-slate-50 p-2 rounded">
+                    <div className="text-slate-500">Description</div>
+                    <div className={`font-medium ${
+                      data.descriptionLength >= 80 ? 'text-green-600' : 
+                      data.descriptionLength >= 60 ? 'text-yellow-600' : 
+                      'text-red-600'
+                    }`}>
+                      {data.descriptionLength}%
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded">
+                    <div className="text-slate-500">Alias</div>
+                    <div className={`font-medium ${
+                      data.aliasUniqueness >= 80 ? 'text-green-600' : 
+                      data.aliasUniqueness >= 60 ? 'text-yellow-600' : 
+                      'text-red-600'
+                    }`}>
+                      {data.aliasUniqueness}%
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 p-2 rounded">
+                    <div className="text-slate-500">Examples</div>
+                    <div className={`font-medium ${
+                      data.examplePresence >= 80 ? 'text-green-600' : 
+                      data.examplePresence >= 60 ? 'text-yellow-600' : 
+                      'text-red-600'
+                    }`}>
+                      {data.examplePresence}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Graph Connectivity Gauge */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Graph Connectivity Gauge</h3>
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="relative w-32 h-32">
+              <svg viewBox="0 0 100 100" className="transform -rotate-90">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="transparent"
+                  stroke="#E5E7EB"
+                  strokeWidth="8"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="transparent"
+                  stroke={widgetData.graphConnectivity.reachableNodes >= 80 ? '#10B981' : 
+                          widgetData.graphConnectivity.reachableNodes >= 50 ? '#F59E0B' : '#EF4444'}
+                  strokeWidth="8"
+                  strokeDasharray={`${2 * Math.PI * 45 * widgetData.graphConnectivity.reachableNodes / 100} ${2 * Math.PI * 45}`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span className="text-3xl font-bold text-slate-900">{widgetData.graphConnectivity.reachableNodes}%</span>
+                <span className="text-xs text-slate-500">connected</span>
+              </div>
+            </div>
+            <div className="mt-4 text-center">
+              <div className="text-sm text-slate-600">
+                {widgetData.graphConnectivity.connectedNodes.toLocaleString()} of {widgetData.graphConnectivity.totalNodes.toLocaleString()} nodes reachable
+              </div>
+              <div className="text-xs text-slate-500 mt-1">
+                {widgetData.graphConnectivity.orphanedNodes.toLocaleString()} orphaned nodes
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. AI-Suggestion Adoption Rate */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">AI-Suggestion Adoption Rate</h3>
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex items-center justify-center">
+              <div className="w-full">
+                <div className="flex h-8 rounded-lg overflow-hidden">
+                  <div 
+                    className="bg-green-500 flex items-center justify-center text-xs font-medium text-white"
+                    style={{ width: `${widgetData.aiSuggestionAdoption.accepted}%` }}
+                  >
+                    {widgetData.aiSuggestionAdoption.accepted}%
+                  </div>
+                  <div 
+                    className="bg-yellow-500 flex items-center justify-center text-xs font-medium text-white"
+                    style={{ width: `${widgetData.aiSuggestionAdoption.overridden}%` }}
+                  >
+                    {widgetData.aiSuggestionAdoption.overridden}%
+                  </div>
+                  <div 
+                    className="bg-red-500 flex items-center justify-center text-xs font-medium text-white"
+                    style={{ width: `${widgetData.aiSuggestionAdoption.ignored}%` }}
+                  >
+                    {widgetData.aiSuggestionAdoption.ignored}%
+                  </div>
+                </div>
+                <div className="flex text-xs text-slate-600 mt-2 justify-between">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                    Accepted
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
+                    Overridden
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
+                    Ignored
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <div className="text-sm text-center text-slate-600">
+                {widgetData.aiSuggestionAdoption.totalSuggestions.toLocaleString()} total AI suggestions
+              </div>
+              <div className="grid grid-cols-3 gap-2 mt-2">
+                {Object.entries(widgetData.aiSuggestionAdoption.byEntityType).map(([type, data]) => (
+                  <div key={type} className="bg-slate-50 p-2 rounded text-xs">
+                    <div className="text-slate-500 capitalize">{type}</div>
+                    <div className="font-medium text-green-600">{data.accepted}% accepted</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Contextualisation Backlog by Age */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Contextualisation Backlog by Age</h3>
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="space-y-4">
+              {Object.values(widgetData.contextualisationBacklog).map((bucket, index) => {
+                const maxCount = Math.max(
+                  widgetData.contextualisationBacklog.recent.count,
+                  widgetData.contextualisationBacklog.medium.count,
+                  widgetData.contextualisationBacklog.older.count,
+                  widgetData.contextualisationBacklog.stale.count
+                );
+                const percentage = (bucket.count / maxCount) * 100;
+                
+                return (
+                  <div key={index} className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium text-slate-900">{bucket.label}</span>
+                      <span className="text-slate-600">{bucket.count} items</span>
+                    </div>
+                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full ${
+                          index === 3 ? 'bg-red-500' : 
+                          index === 2 ? 'bg-yellow-500' : 
+                          index === 1 ? 'bg-blue-500' : 
+                          'bg-green-500'
+                        }`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 text-center text-sm text-slate-600">
+              Total: {Object.values(widgetData.contextualisationBacklog).reduce((sum, bucket) => sum + bucket.count, 0)} pending items
+            </div>
+          </div>
+        </div>
+
+        {/* 6. Top "Orphan" Fields & Relationships */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Top "Orphan" Fields & Relationships</h3>
+          <div className="flex-1 overflow-hidden">
+            <div className="max-h-64 overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-white">
+                  <tr className="border-b border-slate-200">
+                    <th className="text-left py-2 text-slate-600 font-medium">Name</th>
+                    <th className="text-left py-2 text-slate-600 font-medium">Type</th>
+                    <th className="text-right py-2 text-slate-600 font-medium">Queries/Day</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {widgetData.orphanEntities.map((entity, index) => (
+                    <tr 
+                      key={index} 
+                      className={`${index % 2 === 0 ? 'bg-slate-50' : 'bg-white'} hover:bg-blue-50 transition-colors duration-150`}
+                    >
+                      <td className="py-2 font-medium text-slate-900">
+                        <div>{entity.name}</div>
+                        <div className="text-xs text-slate-500">
+                          {entity.table || `${entity.fromTable} → ${entity.toTable}`}
+                        </div>
+                      </td>
                       <td className="py-2 text-slate-600">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          entity.type === 'Table' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                          entity.type === 'Relationship' ? 'bg-orange-100 text-orange-800' : 
+                          entity.type === 'Table' ? 'bg-blue-100 text-blue-800' : 
+                          'bg-purple-100 text-purple-800'
                         }`}>
                           {entity.type}
                         </span>
                       </td>
-                      <td className="py-2 text-right text-slate-600">{entity.usage.toLocaleString()}</td>
-                      <td className="py-2 text-right">
-                        <span className={`font-medium ${
-                          entity.completion < 30 ? 'text-red-600' : 
-                          entity.completion < 60 ? 'text-yellow-600' : 'text-green-600'
-                        }`}>
-                          {entity.completion}%
-                        </span>
+                      <td className="py-2 text-right text-slate-600 font-medium">
+                        {entity.queriesPerDay.toLocaleString()}
                       </td>
                       <td className="py-2 text-center">
                         <button 
                           className="px-2 py-1 text-xs bg-primary text-white rounded hover:bg-primary-dark transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/30"
                           onClick={() => {/* Navigate to contextualise */}}
-                          aria-label={`Contextualise ${entity.name}`}
                         >
-                          Go
+                          Fix
                         </button>
                       </td>
                     </tr>
@@ -422,54 +800,83 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Relationship Adoption Breakdown */}
+        {/* 7. Knowledge Graph Query Heatmap */}
         <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
-          <h3 className="text-lg font-semibold mb-4 text-slate-900">Advanced Relationship Adoption</h3>
-          <div className="flex-1 flex items-center justify-center">
-            <DonutChart 
-              data={widgetData.relationshipAdoption}
-              className="tooltip"
-              title="Breakdown of relationship types by contextualisation percentage"
-            />
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Knowledge Graph Query Heatmap</h3>
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="grid grid-cols-7 gap-1">
+              {widgetData.kgQueryHeatmap.data.map((week, weekIndex) => (
+                week.map((day, dayIndex) => {
+                  const intensity = (day / widgetData.kgQueryHeatmap.maxValue) * 100;
+                  return (
+                    <div 
+                      key={`${weekIndex}-${dayIndex}`} 
+                      className="aspect-square rounded-sm tooltip"
+                      style={{ 
+                        backgroundColor: `rgba(59, 130, 246, ${intensity / 100})`,
+                        border: '1px solid rgba(59, 130, 246, 0.1)'
+                      }}
+                      title={`${day} queries on Day ${dayIndex + 1} of Week ${weekIndex + 1}`}
+                    ></div>
+                  );
+                })
+              ))}
+            </div>
+            <div className="mt-4 flex justify-between items-center text-xs text-slate-500">
+              <div>4 weeks ago</div>
+              <div className="text-center text-sm text-slate-600 font-medium">
+                {widgetData.kgQueryHeatmap.totalQueries.toLocaleString()} total queries
+              </div>
+              <div>Today</div>
+            </div>
+            <div className="mt-2 flex justify-center items-center">
+              <div className="flex items-center space-x-1">
+                <div className="w-3 h-3 rounded-sm bg-blue-100 border border-blue-200"></div>
+                <div className="w-3 h-3 rounded-sm bg-blue-300 border border-blue-400"></div>
+                <div className="w-3 h-3 rounded-sm bg-blue-500 border border-blue-600"></div>
+                <div className="w-3 h-3 rounded-sm bg-blue-700 border border-blue-800"></div>
+                <span className="text-xs text-slate-500 ml-1">Less → More queries</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Active Users Leaderboard */}
+        {/* 8. Relationship Path-Length Distribution */}
         <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
-          <h3 className="text-lg font-semibold mb-4 text-slate-900">Top Contextualisers (This Week)</h3>
-          <div className="flex-1 space-y-3">
-            {widgetData.topContextualisers.map((user) => (
-              <div 
-                key={user.rank} 
-                className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-200 hover:bg-slate-50 hover:transform hover:-translate-y-0.5 ${
-                  user.rank === 1 ? 'bg-yellow-50 border border-yellow-200' : ''
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className={`text-sm font-bold w-6 text-center ${
-                    user.rank === 1 ? 'text-yellow-600' : 'text-slate-600'
-                  }`}>
-                    {user.rank === 1 ? '🏆' : user.rank}
-                  </span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium text-white ${
-                    user.rank === 1 ? 'bg-yellow-500' : 'bg-primary'
-                  }`}>
-                    {user.avatar}
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Relationship Path-Length Distribution</h3>
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="space-y-4">
+              {Object.entries(widgetData.relationshipPathLengths)
+                .filter(([key]) => key !== 'total')
+                .map(([key, data]) => (
+                <div key={key} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium text-slate-900">
+                      {key === 'oneHop' ? '1-Hop (Direct)' : 
+                       key === 'twoHop' ? '2-Hop (Indirect)' : 
+                       '3-Hop (Extended)'}
+                    </span>
+                    <span className="text-slate-600">{data.count.toLocaleString()} relationships</span>
+                  </div>
+                  <div className="h-8 bg-slate-100 rounded-lg overflow-hidden relative">
+                    <div 
+                      className={`h-full ${
+                        key === 'oneHop' ? 'bg-blue-500' : 
+                        key === 'twoHop' ? 'bg-purple-500' : 
+                        'bg-indigo-500'
+                      }`}
+                      style={{ width: `${data.percentage}%` }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
+                      {data.percentage}%
+                    </div>
                   </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-slate-900 truncate">{user.name}</div>
-                </div>
-                <div className="text-right">
-                  <div className={`text-sm font-bold ${
-                    user.rank === 1 ? 'text-yellow-600' : 'text-slate-900'
-                  }`}>
-                    {user.edits}
-                  </div>
-                  <div className="text-xs text-slate-500">edits</div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="mt-4 text-center text-sm text-slate-600">
+              Total: {widgetData.relationshipPathLengths.total.toLocaleString()} active relationships
+            </div>
           </div>
         </div>
       </div>
@@ -656,7 +1063,7 @@ const Dashboard: React.FC = () => {
           setSelectedTableForEdit(null);
         }}
         table={selectedTableForEdit}
-        mode={selectedTableForEdit ? 'edit' : 'add'}
+        onSave={() => {}}
       />
     </div>
   );
