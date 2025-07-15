@@ -10,6 +10,10 @@ import {
 import { useApp } from '../contexts/AppContext';
 import Onboarding from './Onboarding';
 import TableMetadataEditor from '../components/modals/TableMetadataEditor';
+import RadialGauge from '../components/dashboard/RadialGauge';
+import ProgressBar from '../components/dashboard/ProgressBar';
+import SparklineChart from '../components/dashboard/SparklineChart';
+import DonutChart from '../components/dashboard/DonutChart';
 
 const Dashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,6 +83,53 @@ const Dashboard: React.FC = () => {
   ];
 
   // Rest of your existing mock data...
+
+  // Mock data for new widgets
+  const widgetData = {
+    // Contextualisation Coverage Gauge
+    contextualisationCoverage: 67, // (624 + 1234 + 100) / (1000 + 12230 + 100) * 100
+    
+    // KG Conversion Rate
+    kgConversionRate: 58, // Average of all conversion rates
+    
+    // Daily Contextualisations (30-day sparkline)
+    dailyContextualisations: [
+      12, 15, 8, 22, 18, 25, 14, 19, 23, 16,
+      20, 17, 24, 13, 21, 26, 18, 15, 19, 22,
+      16, 28, 24, 20, 17, 23, 19, 25, 21, 18
+    ],
+    
+    // Top 10 Metadata-Hungry Entities
+    metadataHungryEntities: [
+      { name: 'WORK_ORDERS', type: 'Table', usage: 15000, completion: 25 },
+      { name: 'ASSET_STATUS', type: 'Field', usage: 12000, completion: 30 },
+      { name: 'EQUIPMENT_TYPE', type: 'Field', usage: 10500, completion: 35 },
+      { name: 'MAINTENANCE_LOG', type: 'Table', usage: 9800, completion: 20 },
+      { name: 'LOCATION_CODE', type: 'Field', usage: 8900, completion: 40 },
+      { name: 'INVENTORY', type: 'Table', usage: 8200, completion: 45 },
+      { name: 'PRIORITY_LEVEL', type: 'Field', usage: 7500, completion: 25 },
+      { name: 'SUPPLIER_INFO', type: 'Table', usage: 7100, completion: 30 },
+      { name: 'COST_CENTER', type: 'Field', usage: 6800, completion: 35 },
+      { name: 'SAFETY_NOTES', type: 'Field', usage: 6200, completion: 20 }
+    ],
+    
+    // Relationship Adoption Breakdown
+    relationshipAdoption: [
+      { label: 'Existing', value: 45, color: '#3B82F6' },
+      { label: 'Inverse', value: 25, color: '#10B981' },
+      { label: 'Indirect', value: 20, color: '#F59E0B' },
+      { label: 'Self', value: 10, color: '#8B5CF6' }
+    ],
+    
+    // Active Users Leaderboard
+    topContextualisers: [
+      { rank: 1, name: 'Sarah Chen', avatar: 'SC', edits: 47 },
+      { rank: 2, name: 'Mike Rodriguez', avatar: 'MR', edits: 42 },
+      { rank: 3, name: 'Emily Johnson', avatar: 'EJ', edits: 38 },
+      { rank: 4, name: 'David Kim', avatar: 'DK', edits: 35 },
+      { rank: 5, name: 'Lisa Wang', avatar: 'LW', edits: 31 }
+    ]
+  };
 
   return (
     <div className="space-y-6">
@@ -268,6 +319,157 @@ const Dashboard: React.FC = () => {
             <span className="text-slate-500 ml-2">
               ({summary.formsConvertedToKG} forms)
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* New Widget Panel */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        {/* Contextualisation Coverage Gauge */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Overall Contextualisation Coverage</h3>
+          <div className="flex-1 flex items-center justify-center">
+            <RadialGauge 
+              value={widgetData.contextualisationCoverage}
+              label=""
+              className="tooltip"
+              title="Percentage of all entities (tables, fields, relationships) that have at least one description or alias."
+            />
+          </div>
+        </div>
+
+        {/* KG Conversion Rate Meter */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">KG Conversion Rate</h3>
+          <div className="flex-1 flex items-center">
+            <ProgressBar 
+              value={widgetData.kgConversionRate}
+              label=""
+              className="tooltip"
+              title="Of all fully-contextualised entities, how many have been published into the live Knowledge Graph."
+            />
+          </div>
+        </div>
+
+        {/* Contextualisation Velocity Sparkline */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Daily Contextualisations (30-day)</h3>
+          <div className="flex-1 flex items-center">
+            <SparklineChart 
+              data={widgetData.dailyContextualisations}
+              className="w-full tooltip"
+              color="#3B82F6"
+              title="Daily contextualisation activity over the past 30 days"
+            />
+          </div>
+          <div className="mt-2 text-sm text-slate-600 text-center">
+            Avg: {Math.round(widgetData.dailyContextualisations.reduce((a, b) => a + b, 0) / widgetData.dailyContextualisations.length)} edits/day
+          </div>
+        </div>
+
+        {/* Top 10 Metadata-Hungry Entities */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Top Metadata-Hungry Entities</h3>
+          <div className="flex-1 overflow-hidden">
+            <div className="max-h-64 overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-white">
+                  <tr className="border-b border-slate-200">
+                    <th className="text-left py-2 text-slate-600 font-medium">Entity</th>
+                    <th className="text-left py-2 text-slate-600 font-medium">Type</th>
+                    <th className="text-right py-2 text-slate-600 font-medium">Usage</th>
+                    <th className="text-right py-2 text-slate-600 font-medium">Complete</th>
+                    <th className="text-center py-2 text-slate-600 font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {widgetData.metadataHungryEntities.map((entity, index) => (
+                    <tr 
+                      key={index} 
+                      className={`${index % 2 === 0 ? 'bg-slate-50' : 'bg-white'} hover:bg-blue-50 transition-colors duration-150`}
+                    >
+                      <td className="py-2 font-medium text-slate-900 truncate">{entity.name}</td>
+                      <td className="py-2 text-slate-600">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          entity.type === 'Table' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                        }`}>
+                          {entity.type}
+                        </span>
+                      </td>
+                      <td className="py-2 text-right text-slate-600">{entity.usage.toLocaleString()}</td>
+                      <td className="py-2 text-right">
+                        <span className={`font-medium ${
+                          entity.completion < 30 ? 'text-red-600' : 
+                          entity.completion < 60 ? 'text-yellow-600' : 'text-green-600'
+                        }`}>
+                          {entity.completion}%
+                        </span>
+                      </td>
+                      <td className="py-2 text-center">
+                        <button 
+                          className="px-2 py-1 text-xs bg-primary text-white rounded hover:bg-primary-dark transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                          onClick={() => {/* Navigate to contextualise */}}
+                          aria-label={`Contextualise ${entity.name}`}
+                        >
+                          Go
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* Relationship Adoption Breakdown */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Advanced Relationship Adoption</h3>
+          <div className="flex-1 flex items-center justify-center">
+            <DonutChart 
+              data={widgetData.relationshipAdoption}
+              className="tooltip"
+              title="Breakdown of relationship types by contextualisation percentage"
+            />
+          </div>
+        </div>
+
+        {/* Active Users Leaderboard */}
+        <div className="p-4 bg-white rounded-2xl shadow-sm flex flex-col hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-lg font-semibold mb-4 text-slate-900">Top Contextualisers (This Week)</h3>
+          <div className="flex-1 space-y-3">
+            {widgetData.topContextualisers.map((user) => (
+              <div 
+                key={user.rank} 
+                className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-200 hover:bg-slate-50 hover:transform hover:-translate-y-0.5 ${
+                  user.rank === 1 ? 'bg-yellow-50 border border-yellow-200' : ''
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm font-bold w-6 text-center ${
+                    user.rank === 1 ? 'text-yellow-600' : 'text-slate-600'
+                  }`}>
+                    {user.rank === 1 ? '🏆' : user.rank}
+                  </span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium text-white ${
+                    user.rank === 1 ? 'bg-yellow-500' : 'bg-primary'
+                  }`}>
+                    {user.avatar}
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-slate-900 truncate">{user.name}</div>
+                </div>
+                <div className="text-right">
+                  <div className={`text-sm font-bold ${
+                    user.rank === 1 ? 'text-yellow-600' : 'text-slate-900'
+                  }`}>
+                    {user.edits}
+                  </div>
+                  <div className="text-xs text-slate-500">edits</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
