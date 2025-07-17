@@ -388,6 +388,9 @@ const FormsResponses: React.FC = () => {
                   </button>
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Plant
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -436,7 +439,7 @@ const FormsResponses: React.FC = () => {
                     <div className="text-sm font-medium text-slate-900">{form.name}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-xs text-slate-500">{form.description}</div>
+                    <div className="text-sm text-slate-600">{form.description}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm text-slate-600">{form.plant}</div>
