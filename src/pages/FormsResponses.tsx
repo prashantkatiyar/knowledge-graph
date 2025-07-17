@@ -25,6 +25,7 @@ interface FormField {
 interface Form {
   id: string;
   name: string;
+  plant: string;
   type: FormType;
   questions: FormField[];
   responses: number;
@@ -32,6 +33,8 @@ interface Form {
   kgStatus: FormStatus;
   kgProgress?: number;
   lastConverted?: string;
+  lastPublished: string;
+  publishedBy: string;
   ontologyClass?: string;
   relationships?: {
     type: string;
@@ -44,6 +47,7 @@ const mockForms: Form[] = [
   {
     id: 'ef1',
     name: 'Process Deviation Report',
+    plant: '1000-Hamburg',
     type: 'embedded',
     questions: [
       { id: 'q1', name: 'Process ID', type: 'reference', ontologyMapping: 'Process.identifier' },
@@ -55,6 +59,8 @@ const mockForms: Form[] = [
     kgStatus: 'converted',
     kgProgress: 100,
     ontologyClass: 'ProcessDeviation',
+    lastPublished: '2025-01-15T14:30:00Z',
+    publishedBy: 'Sarah Chen',
     relationships: [
       { type: 'IMPACTS', target: 'Process', description: 'Affected process' },
       { type: 'REQUIRES', target: 'Action', description: 'Required corrective actions' }
@@ -63,6 +69,7 @@ const mockForms: Form[] = [
   {
     id: 'rt1',
     name: 'Daily Equipment Check',
+    plant: '2000-Port Niches',
     type: 'round',
     questions: [
       { id: 'q1', name: 'Equipment ID', type: 'reference', ontologyMapping: 'Equipment.identifier' },
@@ -74,6 +81,8 @@ const mockForms: Form[] = [
     kgStatus: 'partially',
     kgProgress: 80,
     ontologyClass: 'EquipmentCheck',
+    lastPublished: '2025-01-14T09:15:00Z',
+    publishedBy: 'Mike Rodriguez',
     relationships: [
       { type: 'CHECKS', target: 'Equipment', description: 'Equipment being inspected' },
       { type: 'RECORDS', target: 'Parameter', description: 'Parameters recorded' }
@@ -82,6 +91,7 @@ const mockForms: Form[] = [
   {
     id: 'pt1',
     name: 'Hot Work Permit',
+    plant: '1000-Hamburg',
     type: 'permit',
     questions: [
       { id: 'q1', name: 'Work Area', type: 'reference', ontologyMapping: 'Location.identifier' },
@@ -93,6 +103,8 @@ const mockForms: Form[] = [
     kgStatus: 'converted',
     kgProgress: 100,
     ontologyClass: 'WorkPermit',
+    lastPublished: '2025-01-15T16:45:00Z',
+    publishedBy: 'Anna Schmidt',
     relationships: [
       { type: 'AUTHORIZES', target: 'Work', description: 'Authorized work' },
       { type: 'REQUIRES', target: 'Safety', description: 'Safety requirements' }
@@ -101,6 +113,7 @@ const mockForms: Form[] = [
   {
     id: 'jt1',
     name: 'Confined Space Entry JHA',
+    plant: '3000-Singapore',
     type: 'jha',
     questions: [
       { id: 'q1', name: 'Space ID', type: 'reference', ontologyMapping: 'Space.identifier' },
@@ -112,6 +125,8 @@ const mockForms: Form[] = [
     kgStatus: 'partially',
     kgProgress: 75,
     ontologyClass: 'HazardAnalysis',
+    lastPublished: '2025-01-13T11:20:00Z',
+    publishedBy: 'David Kim',
     relationships: [
       { type: 'ANALYZES', target: 'Task', description: 'Task being analyzed' },
       { type: 'IDENTIFIES', target: 'Hazard', description: 'Identified hazards' }
@@ -120,6 +135,7 @@ const mockForms: Form[] = [
   {
     id: 'if1',
     name: 'Critical Equipment Inspection',
+    plant: '2000-Port Niches',
     type: 'inspection',
     questions: [
       { id: 'q1', name: 'Equipment ID', type: 'reference', ontologyMapping: 'Equipment.identifier' },
@@ -131,6 +147,8 @@ const mockForms: Form[] = [
     kgStatus: 'converted',
     kgProgress: 100,
     ontologyClass: 'EquipmentInspection',
+    lastPublished: '2025-01-15T13:10:00Z',
+    publishedBy: 'Lisa Johnson',
     relationships: [
       { type: 'INSPECTS', target: 'Equipment', description: 'Equipment being inspected' },
       { type: 'GENERATES', target: 'Finding', description: 'Inspection findings' }
@@ -139,6 +157,7 @@ const mockForms: Form[] = [
   {
     id: 'gf1',
     name: 'Management of Change',
+    plant: '4000-Tokyo',
     type: 'generic',
     questions: [
       { id: 'q1', name: 'Change ID', type: 'reference', ontologyMapping: 'Change.identifier' },
@@ -150,12 +169,26 @@ const mockForms: Form[] = [
     kgStatus: 'partially',
     kgProgress: 60,
     ontologyClass: 'ChangeRequest',
+    lastPublished: '2025-01-12T08:30:00Z',
+    publishedBy: 'Hiroshi Tanaka',
     relationships: [
       { type: 'MODIFIES', target: 'Process', description: 'Process being changed' },
       { type: 'REQUIRES', target: 'Approval', description: 'Required approvals' }
     ]
   }
 ];
+
+const getRelativeTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return 'Today';
+  if (diffInDays === 1) return 'Yesterday';
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+  return `${Math.floor(diffInDays / 30)} months ago`;
+};
 
 const FormsResponses: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FormType | 'all'>('all');
@@ -355,15 +388,24 @@ const FormsResponses: React.FC = () => {
                   </button>
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Questions
+                  Plant
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  Total Questions
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   <button 
                     className="flex items-center gap-1 hover:text-slate-700"
                     onClick={() => handleSort('responses')}
                   >
-                    Responses {sortField === 'responses' && <ArrowDownUp size={14} />}
+                    Total Responses {sortField === 'responses' && <ArrowDownUp size={14} />}
                   </button>
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  Last Published
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  Published By
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   KG Status
@@ -392,13 +434,24 @@ const FormsResponses: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-slate-900">{form.name}</div>
-                    <div className="text-xs text-slate-500 mt-1">{form.description}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs text-slate-500">{form.description}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-slate-600">{form.plant}</div>
                   </td>
                   <td className="px-6 py-4 text-sm text-slate-600">
                     {form.questions.length}
                   </td>
                   <td className="px-6 py-4 text-sm text-slate-600">
                     {form.responses.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600">
+                    {getRelativeTime(form.lastPublished)}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600">
+                    {form.publishedBy}
                   </td>
                   <td className="px-6 py-4">
                     {getStatusBadge(form.kgStatus, form.kgProgress)}
