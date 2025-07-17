@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  Search, Filter, Download, RefreshCw, Edit2, 
-  Eye, HelpCircle, Calendar, Check, AlertTriangle, X,
-  ChevronDown, FileText, ArrowDownUp, Settings
+  Search, Filter, Download, RefreshCw, 
+  HelpCircle, Calendar, Check, X,
+  ChevronDown, ArrowDownUp, MoreHorizontal, Eye, Edit2, BarChart3, Plus, Minus
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Card, Button, Badge, Input } from '../components/ui';
@@ -199,6 +199,7 @@ const FormsResponses: React.FC = () => {
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [selectedForm, setSelectedForm] = useState<Form | null>(null);
+  const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
 
   const handleEditForm = (form: Form) => {
     setSelectedForm(form);
@@ -250,18 +251,37 @@ const FormsResponses: React.FC = () => {
   const getStatusBadge = (status: FormStatus, progress?: number) => {
     switch (status) {
       case 'converted':
-        return <Badge variant="success" icon={<Check size={12} />}>Converted</Badge>;
+        return <Badge variant="success" icon={<Check size={12} />}>Included in Graph</Badge>;
       case 'partially':
-        return (
-          <Badge variant="warning" icon={<AlertTriangle size={12} />}>
-            Partially ({progress}%)
-          </Badge>
-        );
+        return <Badge variant="success" icon={<Check size={12} />}>Included in Graph</Badge>;
       case 'error':
-        return <Badge variant="error" icon={<X size={12} />}>Error</Badge>;
+        return <Badge variant="default">Not Included</Badge>;
       default:
-        return <Badge variant="default">Not Converted</Badge>;
+        return <Badge variant="default">Not Included</Badge>;
     }
+  };
+
+  const handleActionClick = (formId: string, action: string, form: Form) => {
+    setShowActionMenu(null);
+    
+    switch (action) {
+      case 'preview':
+        console.log('Preview form:', formId);
+        break;
+      case 'contextualise':
+        handleEditForm(form);
+        break;
+      case 'responses':
+        console.log('View responses:', formId);
+        break;
+      case 'toggle-graph':
+        console.log('Toggle graph inclusion:', formId);
+        break;
+    }
+  };
+
+  const isFormInGraph = (status: FormStatus) => {
+    return status === 'converted' || status === 'partially';
   };
 
   return (
@@ -411,7 +431,7 @@ const FormsResponses: React.FC = () => {
                   Published By
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  KG Status
+                  Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Actions
@@ -460,26 +480,59 @@ const FormsResponses: React.FC = () => {
                     {getStatusBadge(form.kgStatus, form.kgProgress)}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={<Eye size={16} />}
-                        title="View Form"
-                      />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={<Edit2 size={16} />}
-                        onClick={() => handleEditForm(form)}
-                        title="Edit Form"
-                      />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={<Settings size={16} />}
-                        title="Form Settings"
-                      />
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowActionMenu(showActionMenu === form.id ? null : form.id)}
+                        className="p-2 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-100 transition-colors"
+                        title="More actions"
+                      >
+                        <MoreHorizontal size={16} />
+                      </button>
+                      
+                      {showActionMenu === form.id && (
+                        <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 z-10">
+                          <div className="py-1">
+                            <button
+                              onClick={() => handleActionClick(form.id, 'preview', form)}
+                              className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                            >
+                              <Eye size={16} className="mr-2" />
+                              Preview Form
+                            </button>
+                            <button
+                              onClick={() => handleActionClick(form.id, 'contextualise', form)}
+                              className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                            >
+                              <Edit2 size={16} className="mr-2" />
+                              Contextualise Form
+                            </button>
+                            <button
+                              onClick={() => handleActionClick(form.id, 'responses', form)}
+                              className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                            >
+                              <BarChart3 size={16} className="mr-2" />
+                              View Responses
+                            </button>
+                            <div className="border-t border-slate-200 my-1"></div>
+                            <button
+                              onClick={() => handleActionClick(form.id, 'toggle-graph', form)}
+                              className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                            >
+                              {isFormInGraph(form.kgStatus) ? (
+                                <>
+                                  <Minus size={16} className="mr-2" />
+                                  Exclude from Graph
+                                </>
+                              ) : (
+                                <>
+                                  <Plus size={16} className="mr-2" />
+                                  Add to Graph
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -488,6 +541,14 @@ const FormsResponses: React.FC = () => {
           </table>
         </div>
       </Card>
+
+      {/* Click outside to close action menu */}
+      {showActionMenu && (
+        <div 
+          className="fixed inset-0 z-5" 
+          onClick={() => setShowActionMenu(null)}
+        />
+      )}
 
       <FormMetadataEditor
         isOpen={!!selectedForm}
