@@ -68,6 +68,63 @@ const mockForms: Form[] = [
     ]
   },
   {
+    id: 'ef2',
+    name: 'Equipment Failure Report',
+    plant: '2000-Port Niches',
+    type: 'embedded',
+    questions: [
+      { id: 'q1', name: 'Equipment ID', type: 'reference', ontologyMapping: 'Equipment.identifier' },
+      { id: 'q2', name: 'Failure Type', type: 'select', ontologyMapping: 'Failure.category' },
+      { id: 'q3', name: 'Severity Level', type: 'select', ontologyMapping: 'Failure.severity' }
+    ],
+    responses: 156,
+    description: 'Form for reporting equipment failures and malfunctions',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'EquipmentFailure',
+    lastPublished: '2025-01-14T10:20:00Z',
+    publishedBy: 'Mike Rodriguez',
+    relationships: []
+  },
+  {
+    id: 'ef3',
+    name: 'Safety Incident Report',
+    plant: '3000-Singapore',
+    type: 'embedded',
+    questions: [
+      { id: 'q1', name: 'Incident Type', type: 'select', ontologyMapping: 'Incident.type' },
+      { id: 'q2', name: 'Location', type: 'reference', ontologyMapping: 'Location.identifier' },
+      { id: 'q3', name: 'Injury Severity', type: 'select', ontologyMapping: 'Injury.severity' }
+    ],
+    responses: 67,
+    description: 'Form for reporting safety incidents and near misses',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'SafetyIncident',
+    lastPublished: '2025-01-13T15:45:00Z',
+    publishedBy: 'Anna Schmidt',
+    relationships: []
+  },
+  {
+    id: 'ef4',
+    name: 'Environmental Observation',
+    plant: '4000-Tokyo',
+    type: 'embedded',
+    questions: [
+      { id: 'q1', name: 'Observation Type', type: 'select', ontologyMapping: 'Observation.type' },
+      { id: 'q2', name: 'Environmental Impact', type: 'select', ontologyMapping: 'Impact.environmental' },
+      { id: 'q3', name: 'Action Required', type: 'boolean', ontologyMapping: 'Action.required' }
+    ],
+    responses: 234,
+    description: 'Form for environmental observations and compliance',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'EnvironmentalObservation',
+    lastPublished: '2025-01-12T09:15:00Z',
+    publishedBy: 'David Kim',
+    relationships: []
+  },
+  {
     id: 'rt1',
     name: 'Daily Equipment Check',
     plant: '2000-Port Niches',
@@ -88,6 +145,63 @@ const mockForms: Form[] = [
       { type: 'CHECKS', target: 'Equipment', description: 'Equipment being inspected' },
       { type: 'RECORDS', target: 'Parameter', description: 'Parameters recorded' }
     ]
+  },
+  {
+    id: 'rt2',
+    name: 'Weekly Safety Round',
+    plant: '1000-Hamburg',
+    type: 'round',
+    questions: [
+      { id: 'q1', name: 'Area ID', type: 'reference', ontologyMapping: 'Area.identifier' },
+      { id: 'q2', name: 'Safety Conditions', type: 'checklist', ontologyMapping: 'Safety.conditions' },
+      { id: 'q3', name: 'Compliance Score', type: 'number', ontologyMapping: 'Compliance.score' }
+    ],
+    responses: 890,
+    description: 'Weekly safety inspection rounds',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'SafetyRound',
+    lastPublished: '2025-01-15T11:30:00Z',
+    publishedBy: 'Lisa Johnson',
+    relationships: []
+  },
+  {
+    id: 'rt3',
+    name: 'Maintenance Round',
+    plant: '3000-Singapore',
+    type: 'round',
+    questions: [
+      { id: 'q1', name: 'Equipment List', type: 'multiselect', ontologyMapping: 'Equipment.list' },
+      { id: 'q2', name: 'Maintenance Status', type: 'select', ontologyMapping: 'Maintenance.status' },
+      { id: 'q3', name: 'Next Service Date', type: 'date', ontologyMapping: 'Service.nextDate' }
+    ],
+    responses: 567,
+    description: 'Routine maintenance inspection rounds',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'MaintenanceRound',
+    lastPublished: '2025-01-11T14:20:00Z',
+    publishedBy: 'Hiroshi Tanaka',
+    relationships: []
+  },
+  {
+    id: 'rt4',
+    name: 'Quality Control Round',
+    plant: '4000-Tokyo',
+    type: 'round',
+    questions: [
+      { id: 'q1', name: 'Product Batch', type: 'reference', ontologyMapping: 'Batch.identifier' },
+      { id: 'q2', name: 'Quality Metrics', type: 'number[]', ontologyMapping: 'Quality.metrics' },
+      { id: 'q3', name: 'Pass/Fail Status', type: 'select', ontologyMapping: 'Quality.status' }
+    ],
+    responses: 445,
+    description: 'Quality control inspection rounds',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'QualityRound',
+    lastPublished: '2025-01-10T16:45:00Z',
+    publishedBy: 'Sarah Chen',
+    relationships: []
   },
   {
     id: 'pt1',
@@ -112,6 +226,63 @@ const mockForms: Form[] = [
     ]
   },
   {
+    id: 'pt2',
+    name: 'Confined Space Entry Permit',
+    plant: '2000-Port Niches',
+    type: 'permit',
+    questions: [
+      { id: 'q1', name: 'Space ID', type: 'reference', ontologyMapping: 'Space.identifier' },
+      { id: 'q2', name: 'Gas Testing Results', type: 'number[]', ontologyMapping: 'Gas.levels' },
+      { id: 'q3', name: 'Entry Authorization', type: 'boolean', ontologyMapping: 'Entry.authorized' }
+    ],
+    responses: 178,
+    description: 'Permit for confined space entry work',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'ConfinedSpacePermit',
+    lastPublished: '2025-01-14T13:20:00Z',
+    publishedBy: 'Mike Rodriguez',
+    relationships: []
+  },
+  {
+    id: 'pt3',
+    name: 'Electrical Work Permit',
+    plant: '3000-Singapore',
+    type: 'permit',
+    questions: [
+      { id: 'q1', name: 'Electrical System', type: 'reference', ontologyMapping: 'System.electrical' },
+      { id: 'q2', name: 'Lockout/Tagout', type: 'boolean', ontologyMapping: 'LOTO.required' },
+      { id: 'q3', name: 'Voltage Level', type: 'select', ontologyMapping: 'Voltage.level' }
+    ],
+    responses: 123,
+    description: 'Permit for electrical maintenance work',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'ElectricalPermit',
+    lastPublished: '2025-01-13T08:30:00Z',
+    publishedBy: 'David Kim',
+    relationships: []
+  },
+  {
+    id: 'pt4',
+    name: 'Chemical Handling Permit',
+    plant: '4000-Tokyo',
+    type: 'permit',
+    questions: [
+      { id: 'q1', name: 'Chemical Type', type: 'select', ontologyMapping: 'Chemical.type' },
+      { id: 'q2', name: 'Handling Procedures', type: 'checklist', ontologyMapping: 'Procedure.handling' },
+      { id: 'q3', name: 'Emergency Contacts', type: 'text', ontologyMapping: 'Emergency.contacts' }
+    ],
+    responses: 89,
+    description: 'Permit for chemical handling operations',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'ChemicalPermit',
+    lastPublished: '2025-01-12T12:15:00Z',
+    publishedBy: 'Hiroshi Tanaka',
+    relationships: []
+  },
+  {
     id: 'jt1',
     name: 'Confined Space Entry JHA',
     plant: '3000-Singapore',
@@ -132,6 +303,63 @@ const mockForms: Form[] = [
       { type: 'ANALYZES', target: 'Task', description: 'Task being analyzed' },
       { type: 'IDENTIFIES', target: 'Hazard', description: 'Identified hazards' }
     ]
+  },
+  {
+    id: 'jt2',
+    name: 'Hot Work JHA',
+    plant: '1000-Hamburg',
+    type: 'jha',
+    questions: [
+      { id: 'q1', name: 'Work Type', type: 'select', ontologyMapping: 'Work.type' },
+      { id: 'q2', name: 'Fire Hazards', type: 'multiselect', ontologyMapping: 'Hazard.fire' },
+      { id: 'q3', name: 'Control Measures', type: 'checklist', ontologyMapping: 'Control.fire' }
+    ],
+    responses: 234,
+    description: 'Job hazard analysis for hot work activities',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'HotWorkJHA',
+    lastPublished: '2025-01-15T09:45:00Z',
+    publishedBy: 'Anna Schmidt',
+    relationships: []
+  },
+  {
+    id: 'jt3',
+    name: 'Chemical Handling JHA',
+    plant: '2000-Port Niches',
+    type: 'jha',
+    questions: [
+      { id: 'q1', name: 'Chemical Name', type: 'text', ontologyMapping: 'Chemical.name' },
+      { id: 'q2', name: 'Health Hazards', type: 'multiselect', ontologyMapping: 'Hazard.health' },
+      { id: 'q3', name: 'PPE Required', type: 'checklist', ontologyMapping: 'PPE.chemical' }
+    ],
+    responses: 167,
+    description: 'Job hazard analysis for chemical handling',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'ChemicalJHA',
+    lastPublished: '2025-01-11T14:30:00Z',
+    publishedBy: 'Lisa Johnson',
+    relationships: []
+  },
+  {
+    id: 'jt4',
+    name: 'Electrical Work JHA',
+    plant: '4000-Tokyo',
+    type: 'jha',
+    questions: [
+      { id: 'q1', name: 'Electrical System', type: 'reference', ontologyMapping: 'System.electrical' },
+      { id: 'q2', name: 'Electrical Hazards', type: 'multiselect', ontologyMapping: 'Hazard.electrical' },
+      { id: 'q3', name: 'Safety Procedures', type: 'checklist', ontologyMapping: 'Procedure.electrical' }
+    ],
+    responses: 145,
+    description: 'Job hazard analysis for electrical work',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'ElectricalJHA',
+    lastPublished: '2025-01-10T11:15:00Z',
+    publishedBy: 'Hiroshi Tanaka',
+    relationships: []
   },
   {
     id: 'if1',
@@ -156,26 +384,61 @@ const mockForms: Form[] = [
     ]
   },
   {
-    id: 'gf1',
-    name: 'Management of Change',
-    plant: '4000-Tokyo',
-    type: 'generic',
+    id: 'if2',
+    name: 'Pressure Vessel Inspection',
+    plant: '1000-Hamburg',
+    type: 'inspection',
     questions: [
-      { id: 'q1', name: 'Change ID', type: 'reference', ontologyMapping: 'Change.identifier' },
-      { id: 'q2', name: 'Impact Areas', type: 'multiselect', ontologyMapping: 'Impact.area' },
-      { id: 'q3', name: 'Risk Assessment', type: 'matrix', ontologyMapping: 'Risk.assessment' }
+      { id: 'q1', name: 'Vessel ID', type: 'reference', ontologyMapping: 'Vessel.identifier' },
+      { id: 'q2', name: 'Pressure Tests', type: 'number[]', ontologyMapping: 'Pressure.tests' },
+      { id: 'q3', name: 'Certification Status', type: 'select', ontologyMapping: 'Certification.status' }
     ],
-    responses: 89,
-    description: 'Management of change request and assessment',
+    responses: 234,
+    description: 'Pressure vessel safety inspection',
     kgStatus: 'not_converted',
-    kgProgress: 60,
-    ontologyClass: 'ChangeRequest',
-    lastPublished: '2025-01-12T08:30:00Z',
-    publishedBy: 'Hiroshi Tanaka',
-    relationships: [
-      { type: 'MODIFIES', target: 'Process', description: 'Process being changed' },
-      { type: 'REQUIRES', target: 'Approval', description: 'Required approvals' }
-    ]
+    kgProgress: 0,
+    ontologyClass: 'PressureVesselInspection',
+    lastPublished: '2025-01-14T15:20:00Z',
+    publishedBy: 'Sarah Chen',
+    relationships: []
+  },
+  {
+    id: 'if3',
+    name: 'Fire Safety Inspection',
+    plant: '3000-Singapore',
+    type: 'inspection',
+    questions: [
+      { id: 'q1', name: 'Area ID', type: 'reference', ontologyMapping: 'Area.identifier' },
+      { id: 'q2', name: 'Fire Systems', type: 'checklist', ontologyMapping: 'FireSystem.status' },
+      { id: 'q3', name: 'Compliance Rating', type: 'number', ontologyMapping: 'Compliance.fire' }
+    ],
+    responses: 178,
+    description: 'Fire safety systems inspection',
+    kgStatus: 'converted',
+    kgProgress: 100,
+    ontologyClass: 'FireSafetyInspection',
+    lastPublished: '2025-01-13T10:30:00Z',
+    publishedBy: 'Mike Rodriguez',
+    relationships: []
+  },
+  {
+    id: 'if4',
+    name: 'Environmental Compliance Inspection',
+    plant: '4000-Tokyo',
+    type: 'inspection',
+    questions: [
+      { id: 'q1', name: 'Facility Area', type: 'reference', ontologyMapping: 'Facility.area' },
+      { id: 'q2', name: 'Environmental Parameters', type: 'number[]', ontologyMapping: 'Environment.parameters' },
+      { id: 'q3', name: 'Compliance Status', type: 'select', ontologyMapping: 'Compliance.environmental' }
+    ],
+    responses: 123,
+    description: 'Environmental compliance inspection',
+    kgStatus: 'not_converted',
+    kgProgress: 0,
+    ontologyClass: 'EnvironmentalInspection',
+    lastPublished: '2025-01-12T14:45:00Z',
+    publishedBy: 'David Kim',
+    relationships: []
   }
 ];
 
@@ -338,21 +601,15 @@ const FormsResponses: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold text-slate-900">Forms Responses</h1>
-          <HelpCircle 
-            size={16} 
-            className="text-slate-400 cursor-help"
-            title="View and manage form responses and their Knowledge Graph mappings"
-          />
-        </div>
-        <Button
-          variant="primary"
-          icon={<RefreshCw size={16} />}
-          disabled={selectedForms.length === 0}
-        >
-          {getBulkActionText()}
-        </Button>
+        <h1 className="text-2xl font-semibold text-slate-900">Forms Responses</h1>
+        {selectedForms.length > 0 && (
+          <Button
+            variant="primary"
+            icon={<RefreshCw size={16} />}
+          >
+            {getBulkActionText()}
+          </Button>
+        )}
       </div>
 
       {/* Tabs */}
@@ -364,8 +621,7 @@ const FormsResponses: React.FC = () => {
             { id: 'round', label: 'Round Templates' },
             { id: 'permit', label: 'Permit Templates' },
             { id: 'jha', label: 'JHA Templates' },
-            { id: 'inspection', label: 'Inspection' },
-            { id: 'generic', label: 'Generic Forms' }
+            { id: 'inspection', label: 'Inspection' }
           ].map((tab) => (
             <button
               key={tab.id}
