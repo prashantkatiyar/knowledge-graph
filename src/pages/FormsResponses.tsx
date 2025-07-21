@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { Card, Button, Badge, Input } from '../components/ui';
 import { cn } from '../utils/cn';
 import FormMetadataEditor from '../components/modals/FormMetadataEditor';
+import FormResponsesViewer from '../components/modals/FormResponsesViewer';
 
 type FormType = 'embedded' | 'round' | 'permit' | 'jha' | 'inspection' | 'generic';
 type FormStatus = 'not_converted' | 'partially' | 'converted' | 'error';
@@ -200,6 +201,7 @@ const FormsResponses: React.FC = () => {
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [selectedForm, setSelectedForm] = useState<Form | null>(null);
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
+  const [showResponsesViewer, setShowResponsesViewer] = useState<Form | null>(null);
 
   const handleEditForm = (form: Form) => {
     setSelectedForm(form);
@@ -272,7 +274,7 @@ const FormsResponses: React.FC = () => {
         handleEditForm(form);
         break;
       case 'responses':
-        console.log('View responses:', formId);
+        setShowResponsesViewer(form);
         break;
       case 'toggle-graph':
         console.log('Toggle graph inclusion:', formId);
@@ -555,6 +557,12 @@ const FormsResponses: React.FC = () => {
         onClose={() => setSelectedForm(null)}
         form={selectedForm}
         onSave={handleSaveForm}
+      />
+
+      <FormResponsesViewer
+        isOpen={!!showResponsesViewer}
+        onClose={() => setShowResponsesViewer(null)}
+        form={showResponsesViewer}
       />
     </div>
   );
