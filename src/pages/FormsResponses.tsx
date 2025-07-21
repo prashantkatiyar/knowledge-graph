@@ -79,7 +79,7 @@ const mockForms: Form[] = [
     ],
     responses: 1200,
     description: 'Daily equipment inspection and parameter recording',
-    kgStatus: 'partially',
+    kgStatus: 'not_converted',
     kgProgress: 80,
     ontologyClass: 'EquipmentCheck',
     lastPublished: '2025-01-14T09:15:00Z',
@@ -123,7 +123,7 @@ const mockForms: Form[] = [
     ],
     responses: 156,
     description: 'Job hazard analysis for confined space entry',
-    kgStatus: 'partially',
+    kgStatus: 'not_converted',
     kgProgress: 75,
     ontologyClass: 'HazardAnalysis',
     lastPublished: '2025-01-13T11:20:00Z',
@@ -167,7 +167,7 @@ const mockForms: Form[] = [
     ],
     responses: 89,
     description: 'Management of change request and assessment',
-    kgStatus: 'partially',
+    kgStatus: 'not_converted',
     kgProgress: 60,
     ontologyClass: 'ChangeRequest',
     lastPublished: '2025-01-12T08:30:00Z',
@@ -195,9 +195,15 @@ const FormsResponses: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FormType | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<FormStatus | 'all'>('all');
+  const [filterPlant, setFilterPlant] = useState<string>('all');
+  const [filterPublishedBy, setFilterPublishedBy] = useState<string>('all');
+  const [filterLastPublished, setFilterLastPublished] = useState<string>('all');
   const [sortField, setSortField] = useState<'name' | 'responses' | 'lastConverted'>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [showPlantDropdown, setShowPlantDropdown] = useState(false);
+  const [showPublishedByDropdown, setShowPublishedByDropdown] = useState(false);
+  const [showLastPublishedDropdown, setShowLastPublishedDropdown] = useState(false);
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [selectedForm, setSelectedForm] = useState<Form | null>(null);
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
@@ -214,10 +220,34 @@ const FormsResponses: React.FC = () => {
 
   const statuses = [
     { value: 'all', label: 'All Statuses' },
-    { value: 'converted', label: 'Converted' },
-    { value: 'partially', label: 'Partially Converted' },
-    { value: 'not_converted', label: 'Not Converted' },
-    { value: 'error', label: 'Error' }
+    { value: 'converted', label: 'Included in Graph' },
+    { value: 'not_converted', label: 'Not Included' }
+  ];
+
+  const plants = [
+    { value: 'all', label: 'All Plants' },
+    { value: '1000-Hamburg', label: '1000-Hamburg' },
+    { value: '2000-Port Niches', label: '2000-Port Niches' },
+    { value: '3000-Singapore', label: '3000-Singapore' },
+    { value: '4000-Tokyo', label: '4000-Tokyo' }
+  ];
+
+  const publishedByOptions = [
+    { value: 'all', label: 'All Publishers' },
+    { value: 'Sarah Chen', label: 'Sarah Chen' },
+    { value: 'Mike Rodriguez', label: 'Mike Rodriguez' },
+    { value: 'Anna Schmidt', label: 'Anna Schmidt' },
+    { value: 'David Kim', label: 'David Kim' },
+    { value: 'Lisa Johnson', label: 'Lisa Johnson' },
+    { value: 'Hiroshi Tanaka', label: 'Hiroshi Tanaka' }
+  ];
+
+  const lastPublishedOptions = [
+    { value: 'all', label: 'All Dates' },
+    { value: 'today', label: 'Today' },
+    { value: 'yesterday', label: 'Yesterday' },
+    { value: 'last_week', label: 'Last Week' },
+    { value: 'last_month', label: 'Last Month' }
   ];
 
   const filteredForms = mockForms.filter(form => {
@@ -225,8 +255,13 @@ const FormsResponses: React.FC = () => {
       form.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       form.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTab = activeTab === 'all' || form.type === activeTab;
-    const matchesStatus = filterStatus === 'all' || form.kgStatus === filterStatus;
-    return matchesSearch && matchesTab && matchesStatus;
+    const matchesStatus = filterStatus === 'all' || 
+      (filterStatus === 'converted' && (form.kgStatus === 'converted' || form.kgStatus === 'partially')) ||
+      (filterStatus === 'not_converted' && (form.kgStatus === 'not_converted' || form.kgStatus === 'error'));
+    const matchesPlant = filterPlant === 'all' || form.plant === filterPlant;
+    const matchesPublishedBy = filterPublishedBy === 'all' || form.publishedBy === filterPublishedBy;
+    
+    return matchesSearch && matchesTab && matchesStatus && matchesPlant && matchesPublishedBy;
   });
 
   const sortedForms = [...filteredForms].sort((a, b) => {
@@ -253,13 +288,14 @@ const FormsResponses: React.FC = () => {
   const getStatusBadge = (status: FormStatus, progress?: number) => {
     switch (status) {
       case 'converted':
+      case 'partially':
         return <Badge variant="success" icon={<Check size={12} />}>Included in Graph</Badge>;
       case 'partially':
         return <Badge variant="success" icon={<Check size={12} />}>Included in Graph</Badge>;
       case 'error':
-        return <Badge variant="default">Not Included</Badge>;
+      case 'not_converted':
       default:
-        return <Badge variant="default">Not Included</Badge>;
+        return <Badge variant="error">Not Included</Badge>;
     }
   };
 
@@ -286,6 +322,18 @@ const FormsResponses: React.FC = () => {
     return status === 'converted' || status === 'partially';
   };
 
+  // Calculate bulk action button text
+  const selectedFormsData = mockForms.filter(form => selectedForms.includes(form.id));
+  const allSelectedIncluded = selectedFormsData.every(form => isFormInGraph(form.kgStatus));
+  const allSelectedNotIncluded = selectedFormsData.every(form => !isFormInGraph(form.kgStatus));
+  
+  const getBulkActionText = () => {
+    if (selectedForms.length === 0) return 'Update Knowledge Graph';
+    if (allSelectedIncluded) return `Exclude from Graph (${selectedForms.length})`;
+    if (allSelectedNotIncluded) return `Add to Graph (${selectedForms.length})`;
+    return `Update Selection (${selectedForms.length})`;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -301,8 +349,9 @@ const FormsResponses: React.FC = () => {
         <Button
           variant="primary"
           icon={<RefreshCw size={16} />}
+          disabled={selectedForms.length === 0}
         >
-          Update Knowledge Graph
+          {getBulkActionText()}
         </Button>
       </div>
 
@@ -373,6 +422,82 @@ const FormsResponses: React.FC = () => {
                     )}
                   >
                     {status.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Plant Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setShowPlantDropdown(!showPlantDropdown);
+              setShowStatusDropdown(false);
+              setShowPublishedByDropdown(false);
+              setShowLastPublishedDropdown(false);
+            }}
+            className="inline-flex items-center justify-between w-48 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <span>{plants.find(p => p.value === filterPlant)?.label}</span>
+            <ChevronDown size={16} className="ml-2 text-slate-400" />
+          </button>
+          
+          {showPlantDropdown && (
+            <div className="absolute z-10 w-48 mt-1 bg-white rounded-lg shadow-lg border border-slate-200">
+              <div className="py-1">
+                {plants.map((plant) => (
+                  <button
+                    key={plant.value}
+                    onClick={() => {
+                      setFilterPlant(plant.value);
+                      setShowPlantDropdown(false);
+                    }}
+                    className={cn(
+                      "block w-full px-4 py-2 text-sm text-left hover:bg-slate-50",
+                      filterPlant === plant.value ? "text-primary font-medium" : "text-slate-700"
+                    )}
+                  >
+                    {plant.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Published By Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setShowPublishedByDropdown(!showPublishedByDropdown);
+              setShowStatusDropdown(false);
+              setShowPlantDropdown(false);
+              setShowLastPublishedDropdown(false);
+            }}
+            className="inline-flex items-center justify-between w-48 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <span>{publishedByOptions.find(p => p.value === filterPublishedBy)?.label}</span>
+            <ChevronDown size={16} className="ml-2 text-slate-400" />
+          </button>
+          
+          {showPublishedByDropdown && (
+            <div className="absolute z-10 w-48 mt-1 bg-white rounded-lg shadow-lg border border-slate-200">
+              <div className="py-1">
+                {publishedByOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      setFilterPublishedBy(option.value);
+                      setShowPublishedByDropdown(false);
+                    }}
+                    className={cn(
+                      "block w-full px-4 py-2 text-sm text-left hover:bg-slate-50",
+                      filterPublishedBy === option.value ? "text-primary font-medium" : "text-slate-700"
+                    )}
+                  >
+                    {option.label}
                   </button>
                 ))}
               </div>
@@ -549,6 +674,19 @@ const FormsResponses: React.FC = () => {
         <div 
           className="fixed inset-0 z-5" 
           onClick={() => setShowActionMenu(null)}
+        />
+      )}
+
+      {/* Click outside to close dropdowns */}
+      {(showStatusDropdown || showPlantDropdown || showPublishedByDropdown || showLastPublishedDropdown) && (
+        <div 
+          className="fixed inset-0 z-5" 
+          onClick={() => {
+            setShowStatusDropdown(false);
+            setShowPlantDropdown(false);
+            setShowPublishedByDropdown(false);
+            setShowLastPublishedDropdown(false);
+          }}
         />
       )}
 
